@@ -1,23 +1,18 @@
-const express = require('express')
-const app = express()
-
+const app = require('./app')
 const sequelize = require('./util/db')
-const blogRouter = require('./controllers/blogs')
 
-app.use(express.json())
-
-app.use('/api/blogs', blogRouter)
+const PORT = 3001
 
 const start = async () => {
     try {
         await sequelize.authenticate()
         console.log('Database connected')
 
-        app.listen(3001, () => {
-            console.log('Server running on port 3001')
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`)
         })
     } catch (error) {
-        console.error('Error connecting to database:', error)
+        console.error('Unable to connect to database:', error)
     }
 }
 
