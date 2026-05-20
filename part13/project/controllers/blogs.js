@@ -1,6 +1,8 @@
 const router = require('express').Router()
 const sequelize = require('../util/db')
 
+// Blog controller
+
 router.get('/', async (req, res) => {
     const blogs = await sequelize.query('SELECT * FROM blogs')
 
