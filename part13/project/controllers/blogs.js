@@ -29,6 +29,34 @@ router.post('/', async (req, res) => {
     res.status(201).json(result[0][0])
 })
 
+router.put('/:id', async (req, res) => {
+    const id = req.params.id
+    const { likes } = req.body
+
+    const result = await sequelize.query(
+        `
+    UPDATE blogs
+    SET likes = :likes
+    WHERE id = :id
+    RETURNING *
+    `,
+        {
+            replacements: {
+                likes,
+                id
+            }
+        }
+    )
+
+    if (result[0].length === 0) {
+        return res.status(404).json({
+            error: 'blog not found'
+        })
+    }
+
+    res.json(result[0][0])
+})
+
 router.delete('/:id', async (req, res) => {
     const id = req.params.id
 
