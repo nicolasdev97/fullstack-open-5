@@ -4,6 +4,7 @@ const blogRouter = require('./controllers/blogs')
 const userRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
 const authorsRouter = require('./controllers/authors')
+const testingRouter = require('./controllers/testing')
 
 const middleware = require('./util/middleware')
 
@@ -13,10 +14,15 @@ app.use(express.json())
 
 app.use(middleware.tokenExtractor)
 
+app.get('/', (req, res) => {
+    res.send('hello world')
+})
+
 app.use('/api/blogs', blogRouter)
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/authors', authorsRouter)
+app.use('/api', testingRouter)
 
 app.use(middleware.errorHandler)
 

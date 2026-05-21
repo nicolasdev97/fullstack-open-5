@@ -3,11 +3,21 @@ const router = require('express').Router()
 const User = require('../models/user')
 const Blog = require('../models/blog')
 
+const bcrypt = require('bcrypt')
+
 // User controller
 
 router.post('/', async (req, res, next) => {
     try {
-        const user = await User.create(req.body)
+        const { username, name, password } = req.body
+
+        const passwordHash = await bcrypt.hash(password, 10)
+
+        const user = await User.create({
+            username,
+            name,
+            passwordHash
+        })
 
         res.json(user)
     } catch (error) {
