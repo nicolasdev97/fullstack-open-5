@@ -8,14 +8,26 @@ const User = require('../models/user')
 
 const { SECRET } = require('../util/config')
 
+const { Op } = require('sequelize')
+
 // Blog controller
 
 router.get('/', async (req, res) => {
+    const where = {}
+
+    if (req.query.search) {
+        where.title = {
+            [Op.iLike]: `%${req.query.search}%`
+        }
+    }
+
     const blogs = await Blog.findAll({
+        attributes: { exclude: ['userId'] },
         include: {
             model: User,
             attributes: ['username', 'name']
-        }
+        },
+        where
     })
 
     res.json(blogs)
