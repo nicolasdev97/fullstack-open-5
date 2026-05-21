@@ -1,6 +1,13 @@
 const router = require('express').Router()
 const sequelize = require('../util/db')
 
+const jwt = require('jsonwebtoken')
+
+const Blog = require('../models/blog')
+const User = require('../models/user')
+
+const { SECRET } = require('../util/config')
+
 // Blog controller
 
 router.get('/', async (req, res) => {
@@ -11,25 +18,22 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res, next) => {
     try {
-        const { author, url, title, likes } = req.body
+        const decodedToken = jwt.verify(req.token, SECRET)
 
-        const result = await sequelize.query(
-            `
-      INSERT INTO blogs (author, url, title, likes)
-      VALUES (:author, :url, :title, :likes)
-      RETURNING *
-      `,
-            {
-                replacements: {
-                    author,
-                    url,
-                    title,
-                    likes: likes || 0
-                }
-            }
-        )
+        if (!decodedToken.id) {
+            return res.status(401).json({
+                error: 'token invalid'
+            })
+        }
 
-        res.status(201).json(result[0][0])
+        const user = await User.findByPk(decodedToken.id)
+
+        const blog = await Blog.create({
+            ...req.body,
+            userId: user.id
+        })
+
+        res.json(blog)
     } catch (error) {
         next(error)
     }

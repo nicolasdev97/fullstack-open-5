@@ -2,6 +2,8 @@ const { Model, DataTypes } = require('sequelize')
 
 const sequelize = require('../util/db')
 
+const Blog = require('./blog')
+
 // User model
 
 class User extends Model { }
@@ -28,5 +30,8 @@ User.init(
         modelName: 'user'
     }
 )
+
+User.hasMany(Blog)
+Blog.belongsTo(User)
 
 module.exports = User
