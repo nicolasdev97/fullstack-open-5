@@ -71,17 +71,36 @@ router.put('/:id', async (req, res, next) => {
     }
 })
 
-router.delete('/:id', async (req, res) => {
-    const id = req.params.id
+router.delete('/:id', async (req, res, next) => {
+    try {
+        const decodedToken = jwt.verify(req.token, SECRET)
 
-    await sequelize.query(
-        'DELETE FROM blogs WHERE id = :id',
-        {
-            replacements: { id }
+        if (!decodedToken.id) {
+            return res.status(401).json({
+                error: 'token invalid'
+            })
         }
-    )
 
-    res.status(204).end()
+        const blog = await Blog.findByPk(req.params.id)
+
+        if (!blog) {
+            return res.status(404).json({
+                error: 'blog not found'
+            })
+        }
+
+        if (blog.userId !== decodedToken.id) {
+            return res.status(401).json({
+                error: 'only the creator can delete a blog'
+            })
+        }
+
+        await blog.destroy()
+
+        res.status(204).end()
+    } catch (error) {
+        next(error)
+    }
 })
 
 module.exports = router
