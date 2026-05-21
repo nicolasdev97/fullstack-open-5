@@ -6,6 +6,8 @@ const User = require('../models/user')
 
 const { SECRET } = require('../util/config')
 
+// Login controller
+
 router.post('/', async (req, res) => {
     const { username, password } = req.body
 
