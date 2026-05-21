@@ -11,9 +11,14 @@ const { SECRET } = require('../util/config')
 // Blog controller
 
 router.get('/', async (req, res) => {
-    const blogs = await sequelize.query('SELECT * FROM blogs')
+    const blogs = await Blog.findAll({
+        include: {
+            model: User,
+            attributes: ['username', 'name']
+        }
+    })
 
-    res.json(blogs[0])
+    res.json(blogs)
 })
 
 router.post('/', async (req, res, next) => {

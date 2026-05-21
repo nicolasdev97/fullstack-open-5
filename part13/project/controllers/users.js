@@ -1,6 +1,7 @@
 const router = require('express').Router()
 
 const User = require('../models/user')
+const Blog = require('../models/blog')
 
 // User controller
 
@@ -15,7 +16,12 @@ router.post('/', async (req, res, next) => {
 })
 
 router.get('/', async (req, res) => {
-    const users = await User.findAll()
+    const users = await User.findAll({
+        include: {
+            model: Blog,
+            attributes: ['id', 'title', 'author', 'url', 'likes']
+        }
+    })
 
     res.json(users)
 })
