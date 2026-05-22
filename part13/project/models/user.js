@@ -36,7 +36,14 @@ User.init({
 User.hasMany(Blog)
 Blog.belongsTo(User)
 
-User.belongsToMany(Blog, { through: ReadingList })
-Blog.belongsToMany(User, { through: ReadingList })
+User.belongsToMany(Blog, {
+    through: ReadingList,
+    as: 'readings'
+})
+
+Blog.belongsToMany(User, {
+    through: ReadingList,
+    as: 'users'
+})
 
 module.exports = User
