@@ -3,6 +3,7 @@ const { Model, DataTypes } = require('sequelize')
 const { sequelize } = require('../util/db')
 
 const Blog = require('./blog')
+const ReadingList = require('./reading_list')
 
 // User model
 
@@ -34,5 +35,8 @@ User.init({
 
 User.hasMany(Blog)
 Blog.belongsTo(User)
+
+User.belongsToMany(Blog, { through: ReadingList })
+Blog.belongsToMany(User, { through: ReadingList })
 
 module.exports = User
