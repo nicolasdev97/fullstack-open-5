@@ -37,27 +37,28 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res, next) => {
     try {
-        const user = await User.findByPk(req.params.id, {
-            attributes: ['name', 'username'],
-            include: [
-                {
-                    model: Blog,
-                    as: 'readings',
-                    attributes: ['id', 'url', 'title', 'author', 'likes', 'year'],
-                    through: {
-                        attributes: ['id', 'read']
-                    }
-                }
-            ]
-        })
 
-        if (!user) {
-            return res.status(404).json({
-                error: 'user not found'
-            })
+        const where = {}
+
+        if (req.query.read) {
+            where.read = req.query.read === 'true'
         }
 
+        const user = await User.findByPk(req.params.id, {
+            attributes: ['name', 'username'],
+            include: {
+                model: Blog,
+                as: 'readings',
+                attributes: ['id', 'url', 'title', 'author', 'likes', 'year'],
+                through: {
+                    attributes: ['id', 'read'],
+                    where
+                }
+            }
+        })
+
         res.json(user)
+
     } catch (error) {
         next(error)
     }
