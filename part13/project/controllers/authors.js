@@ -2,7 +2,7 @@ const router = require('express').Router()
 
 const { fn, col } = require('sequelize')
 
-const Blog = require('../models/blog')
+const { Blog } = require('../models')
 
 // Authors controller
 

@@ -3,8 +3,7 @@ const sequelize = require('../util/db')
 
 const jwt = require('jsonwebtoken')
 
-const Blog = require('../models/blog')
-const User = require('../models/user')
+const { User, Blog } = require('../models')
 
 const { SECRET } = require('../util/config')
 
