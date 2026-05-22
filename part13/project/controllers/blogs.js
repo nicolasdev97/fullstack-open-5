@@ -68,31 +68,17 @@ router.post('/', async (req, res, next) => {
 
 router.put('/:id', async (req, res, next) => {
     try {
-        const id = req.params.id
-        const { likes } = req.body
+        const blog = await Blog.findByPk(req.params.id)
 
-        const result = await sequelize.query(
-            `
-      UPDATE blogs
-      SET likes = :likes
-      WHERE id = :id
-      RETURNING *
-      `,
-            {
-                replacements: {
-                    likes,
-                    id
-                }
-            }
-        )
-
-        if (result[0].length === 0) {
+        if (!blog) {
             return res.status(404).json({
                 error: 'blog not found'
             })
         }
 
-        res.json(result[0][0])
+        await blog.update(req.body)
+
+        res.json(blog)
     } catch (error) {
         next(error)
     }
