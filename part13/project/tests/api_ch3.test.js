@@ -22,7 +22,8 @@ describe('Blogs API', () => {
     const newBlog = {
       title: 'Test Blog Post',
       author: 'Test Author',
-      url: 'https://example.com/test-blog'
+      url: 'https://example.com/test-blog',
+      year: 2024
     }
 
     const response = await axios.post(`${baseUrl}/blogs`, newBlog, {
@@ -34,6 +35,7 @@ describe('Blogs API', () => {
     assert.strictEqual(response.data.author, newBlog.author)
     assert.strictEqual(response.data.url, newBlog.url)
     assert.strictEqual(response.data.likes, 0)
+    assert.strictEqual(response.data.year, newBlog.year)
   })
 
   it('created blog appears in blogs list', async () => {
@@ -66,7 +68,7 @@ describe('Users API', () => {
   it('users have correct properties', async () => {
     const response = await axios.get(`${baseUrl}/users`)
     const user = response.data[0]
-    
+
     assert.ok(user.id)
     assert.ok(user.username)
     assert.ok(user.name)
@@ -83,7 +85,7 @@ describe('Authors API', () => {
 
   it('author stats have correct structure', async () => {
     const response = await axios.get(`${baseUrl}/authors`)
-    
+
     if (response.data.length > 0) {
       const author = response.data[0]
       assert.ok(author.author)

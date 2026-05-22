@@ -2,9 +2,6 @@ const { Model, DataTypes } = require('sequelize')
 
 const { sequelize } = require('../util/db')
 
-const Blog = require('./blog')
-const ReadingList = require('./reading_list')
-
 // User model
 
 class User extends Model { }
@@ -31,19 +28,6 @@ User.init({
     underscored: true,
     timestamps: true,
     modelName: 'user'
-})
-
-User.hasMany(Blog)
-Blog.belongsTo(User)
-
-User.belongsToMany(Blog, {
-    through: ReadingList,
-    as: 'readings'
-})
-
-Blog.belongsToMany(User, {
-    through: ReadingList,
-    as: 'users'
 })
 
 module.exports = User
