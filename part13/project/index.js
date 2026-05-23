@@ -1,11 +1,13 @@
 const app = require('./app')
 const { sequelize } = require('./util/db')
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 
 const start = async () => {
     try {
         await sequelize.authenticate()
+        await sequelize.sync()
+
         console.log('Database connected')
 
         app.listen(PORT, () => {

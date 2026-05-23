@@ -3,7 +3,7 @@ const axios = require('axios')
 const baseUrl = 'http://localhost:3001/api'
 
 const resetDatabase = async () => {
-  await axios.post(`${baseUrl}/reset`)
+  await axios.post(`${baseUrl}/testing/reset`)
 }
 
 const createUser = async (username, name, password) => {
