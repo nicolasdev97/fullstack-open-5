@@ -1,8 +1,8 @@
 const router = require('express').Router()
 
 const {
-    User,
     Blog,
+    User,
     ReadingList,
     Session
 } = require('../models')

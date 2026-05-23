@@ -24,7 +24,7 @@ app.use('/api/login', loginRouter)
 app.use('/api/authors', authorsRouter)
 app.use('/api/readinglists', readingListsRouter)
 app.use('/api/logout', logoutRouter)
-app.use('/api', testingRouter)
+app.use('/api/testing', testingRouter)
 
 app.use(middleware.errorHandler)
 
