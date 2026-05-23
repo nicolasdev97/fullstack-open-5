@@ -2,22 +2,31 @@ const router = require('express').Router()
 
 const { Session } = require('../models')
 
-const { tokenExtractor } = require('../util/middleware')
+const {
+    tokenExtractor,
+    userExtractor
+} = require('../util/middleware')
 
-router.delete('/', tokenExtractor, async (req, res, next) => {
-    try {
+router.delete(
+    '/',
+    tokenExtractor,
+    userExtractor,
+    async (req, res, next) => {
 
-        await Session.destroy({
-            where: {
-                token: req.token
-            }
-        })
+        try {
 
-        res.status(204).end()
+            await Session.destroy({
+                where: {
+                    userId: req.user.id
+                }
+            })
 
-    } catch (error) {
-        next(error)
+            res.status(204).end()
+
+        } catch (error) {
+            next(error)
+        }
     }
-})
+)
 
 module.exports = router

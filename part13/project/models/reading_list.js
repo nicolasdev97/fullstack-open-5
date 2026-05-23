@@ -28,7 +28,8 @@ ReadingList.init({
     sequelize,
     underscored: true,
     timestamps: true,
-    modelName: 'reading_list'
+    modelName: 'reading_list',
+    tableName: 'reading_lists'
 })
 
 module.exports = ReadingList

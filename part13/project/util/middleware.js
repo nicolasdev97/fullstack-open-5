@@ -8,6 +8,7 @@ const { Session, User } = require('../models')
 
 const errorHandler = (error, req, res, next) => {
     console.error(error)
+    console.error(error.stack)
 
     if (
         error instanceof ValidationError ||
@@ -37,6 +38,12 @@ const tokenExtractor = (req, res, next) => {
 
 const userExtractor = async (req, res, next) => {
     try {
+
+        if (!req.token) {
+            return res.status(401).json({
+                error: 'token missing'
+            })
+        }
 
         const decodedToken = jwt.verify(req.token, SECRET)
 
