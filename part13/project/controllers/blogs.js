@@ -7,6 +7,8 @@ const { User, Blog } = require('../models')
 
 const { SECRET } = require('../util/config')
 
+const { tokenExtractor, userExtractor } = require('../util/middleware')
+
 const { Op } = require('sequelize')
 
 // Blog controller
@@ -42,24 +44,16 @@ router.get('/', async (req, res) => {
     res.json(blogs)
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', tokenExtractor, userExtractor, async (req, res, next) => {
     try {
-        const decodedToken = jwt.verify(req.token, SECRET)
-
-        if (!decodedToken.id) {
-            return res.status(401).json({
-                error: 'token invalid'
-            })
-        }
-
-        const user = await User.findByPk(decodedToken.id)
 
         const blog = await Blog.create({
             ...req.body,
-            userId: user.id
+            userId: req.user.id
         })
 
         res.json(blog)
+
     } catch (error) {
         next(error)
     }
@@ -83,11 +77,11 @@ router.put('/:id', async (req, res, next) => {
     }
 })
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', tokenExtractor, userExtractor, async (req, res, next) => {
     try {
-        const decodedToken = jwt.verify(req.token, SECRET)
+        const user = await User.findByPk(req.decodedToken.id)
 
-        if (!decodedToken.id) {
+        if (!user) {
             return res.status(401).json({
                 error: 'token invalid'
             })
@@ -101,7 +95,7 @@ router.delete('/:id', async (req, res, next) => {
             })
         }
 
-        if (blog.userId !== decodedToken.id) {
+        if (blog.userId !== user.id) {
             return res.status(401).json({
                 error: 'only the creator can delete a blog'
             })
